@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { SessionProvider } from '@/components/SessionProvider';
 import './globals.css';
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
@@ -22,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="color-scheme" content="only light" />
       </head>
       <body className="h-full bg-slate-50 text-slate-900 transition-colors duration-200">
-        <SessionProvider>{children}</SessionProvider>
+        {children}
       </body>
     </html>
   );

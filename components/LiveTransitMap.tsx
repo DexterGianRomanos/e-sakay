@@ -1,16 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import { TransitVehicle, MOCK_VEHICLES } from '@/lib/mock-transit-data';
 import { FareCalculatorCard } from '@/components/FareCalculatorCard';
 import { RouteDetailsSheet } from '@/components/RouteDetailsSheet';
 import { WeatherWidget } from '@/components/WeatherWidget';
-import { Navigation, Wifi, Calculator, Map as MapIcon, LogOut, Loader2 } from 'lucide-react';
+import { Navigation, Wifi, Calculator, Map as MapIcon } from 'lucide-react';
 
 export interface ConfirmedRoute {
   originName: string;
@@ -33,20 +30,6 @@ export function LiveTransitMap() {
   const [selectedVehicle, setSelectedVehicle] = useState<TransitVehicle | null>(null);
   const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [mobileTab, setMobileTab] = useState<'calculator' | 'map'>('calculator');
-  const [loadingAuth, setLoadingAuth] = useState(true);
-  const router = useRouter();
-
-  // Protect route via Firebase Auth state listener
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push('/login');
-      } else {
-        setLoadingAuth(false);
-      }
-    });
-    return () => unsubscribe();
-  }, [router]);
 
   const [activeRoute, setActiveRoute] = useState<ConfirmedRoute | null>({
     originName: 'Tomas Oppus',
@@ -60,20 +43,6 @@ export function LiveTransitMap() {
     setSelectedVehicle(null);
     setMobileTab('map');
   };
-
-  const handleSignOut = async () => {
-    await signOut(auth);
-    router.push('/login');
-  };
-
-  if (loadingAuth) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-3 text-white">
-        <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
-        <p className="text-xs text-slate-400 font-medium">Verifying Firebase Authentication...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6 pb-20 lg:pb-0 max-w-7xl mx-auto p-4 sm:p-6">
@@ -104,14 +73,6 @@ export function LiveTransitMap() {
             <Wifi className="w-3.5 h-3.5" /> Live GPS Syncing
           </span>
 
-          {/* Sign Out Button */}
-          <button
-            onClick={handleSignOut}
-            className="flex items-center gap-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 font-semibold px-3 py-2 rounded-xl text-xs transition-all cursor-pointer"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Sign Out</span>
-          </button>
         </div>
       </div>
 
