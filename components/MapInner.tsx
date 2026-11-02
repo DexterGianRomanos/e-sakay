@@ -186,7 +186,7 @@ export default function MapInner({ vehicles, onSelectVehicle, userCoords, onSetU
         <button
           onClick={handleLocateUser}
           disabled={isLocating}
-          className="flex items-center gap-2 bg-slate-900/90 text-white backdrop-blur-md px-3.5 py-2.5 rounded-xl text-xs font-semibold shadow-lg hover:bg-slate-800 transition-all border border-slate-700/50 cursor-pointer"
+          className="flex items-center gap-2 bg-white/95 text-slate-800 backdrop-blur-md px-3.5 py-2.5 rounded-xl text-xs font-semibold shadow-lg hover:bg-slate-50 transition-all border border-slate-200 cursor-pointer lg:bg-slate-900/90 lg:text-white lg:hover:bg-slate-800 lg:border-slate-700/50"
         >
           <Navigation className={`w-4 h-4 text-cyan-400 ${isLocating ? 'animate-spin' : ''}`} />
           {isLocating ? 'Locating...' : 'Locate Me'}

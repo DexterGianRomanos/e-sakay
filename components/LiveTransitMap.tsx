@@ -101,13 +101,13 @@ export function LiveTransitMap() {
       </div>
 
       {/* Fixed Mobile Bottom Taskbar */}
-      <div className="fixed bottom-0 left-0 right-0 z-[2000] bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 px-6 py-2 flex items-center justify-around lg:hidden shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 z-[2000] bg-white/95 backdrop-blur-xl border-t border-slate-200 px-6 py-2 flex items-center justify-around lg:hidden shadow-xl">
         <button
           onClick={() => setMobileTab('calculator')}
           className={`flex flex-col items-center gap-1 text-[11px] font-semibold py-1 px-4 rounded-xl transition-all cursor-pointer ${
             mobileTab === 'calculator'
-              ? 'text-cyan-400 bg-slate-800/80 border border-slate-700/60'
-              : 'text-slate-400 hover:text-white'
+              ? 'text-teal-700 bg-teal-50 border border-teal-200'
+              : 'text-slate-500 hover:text-slate-900'
           }`}
         >
           <Calculator className="w-5 h-5" />
@@ -118,8 +118,8 @@ export function LiveTransitMap() {
           onClick={() => setMobileTab('map')}
           className={`flex flex-col items-center gap-1 text-[11px] font-semibold py-1 px-4 rounded-xl transition-all cursor-pointer ${
             mobileTab === 'map'
-              ? 'text-cyan-400 bg-slate-800/80 border border-slate-700/60'
-              : 'text-slate-400 hover:text-white'
+              ? 'text-teal-700 bg-teal-50 border border-teal-200'
+              : 'text-slate-500 hover:text-slate-900'
           }`}
         >
           <MapIcon className="w-5 h-5" />
