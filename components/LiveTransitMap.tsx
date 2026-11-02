@@ -8,13 +8,19 @@ import { FareCalculatorCard } from '@/components/FareCalculatorCard';
 import { RouteDetailsSheet } from '@/components/RouteDetailsSheet';
 import { WeatherWidget } from '@/components/WeatherWidget';
 import { Navigation, Wifi, Calculator, Map as MapIcon } from 'lucide-react';
+import { calculateFare } from '@/lib/ltfrb-calculator';
 
 export interface ConfirmedRoute {
   originName: string;
   destName: string;
   originCoords: { lat: number; lng: number };
   destCoords: { lat: number; lng: number };
+  estimatedMinutes: number;
+  estimatedFare: number;
+  vehicleName: string;
 }
+
+const DEFAULT_ROUTE_FARE = calculateFare('jeepney_modern', 54.8, 'student');
 
 const MapInner = dynamic(() => import('@/components/MapInner'), {
   ssr: false,
@@ -36,6 +42,9 @@ export function LiveTransitMap() {
     destName: 'Maasin City',
     originCoords: { lat: 10.2444, lng: 124.9806 },
     destCoords: { lat: 10.1336, lng: 124.8415 },
+    estimatedMinutes: DEFAULT_ROUTE_FARE.estimatedMinutes,
+    estimatedFare: DEFAULT_ROUTE_FARE.finalFare,
+    vehicleName: DEFAULT_ROUTE_FARE.vehicleName,
   });
 
   const handleConfirmRoute = (route: ConfirmedRoute) => {

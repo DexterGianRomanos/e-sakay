@@ -25,6 +25,9 @@ interface RoutePoints {
   destName: string;
   originCoords: { lat: number; lng: number };
   destCoords: { lat: number; lng: number };
+  estimatedMinutes: number;
+  estimatedFare: number;
+  vehicleName: string;
 }
 
 interface FareCalculatorCardProps {
@@ -145,6 +148,9 @@ export const FareCalculatorCard: React.FC<FareCalculatorCardProps> = ({ userCoor
         destName: currentRouteData.destName,
         originCoords: currentRouteData.originCoords,
         destCoords: currentRouteData.destCoords,
+        estimatedMinutes: fareResult.estimatedMinutes,
+        estimatedFare: fareResult.finalFare,
+        vehicleName: fareResult.vehicleName,
       });
     }
   };

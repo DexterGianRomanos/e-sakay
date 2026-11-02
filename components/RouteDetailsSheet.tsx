@@ -3,12 +3,19 @@
 import React from 'react';
 import { TransitVehicle } from '@/lib/mock-transit-data';
 import { ConfirmedRoute } from '@/components/LiveTransitMap';
-import { Clock, Gauge, Users, MapPin, Navigation } from 'lucide-react';
+import { Banknote, Clock, Gauge, Users, MapPin, Navigation } from 'lucide-react';
 
 interface RouteDetailsProps {
   selectedVehicle: TransitVehicle | null;
   activeRoute?: ConfirmedRoute | null;
 }
+
+const formatETA = (minutes: number) => {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  if (hours > 0) return `${hours}h ${remainingMinutes}m`;
+  return `${remainingMinutes} mins`;
+};
 
 export const RouteDetailsSheet: React.FC<RouteDetailsProps> = ({ selectedVehicle, activeRoute }) => {
   // 1. Prioritize displaying user's confirmed active trip route if set
@@ -35,7 +42,7 @@ export const RouteDetailsSheet: React.FC<RouteDetailsProps> = ({ selectedVehicle
           </span>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 my-4">
+        <div className="grid grid-cols-2 gap-3 my-4">
           <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
             <MapPin className="w-4 h-4 text-teal-500 mx-auto mb-1" />
             <p className="text-[10px] text-slate-400">Origin</p>
@@ -50,8 +57,22 @@ export const RouteDetailsSheet: React.FC<RouteDetailsProps> = ({ selectedVehicle
               {activeRoute.destName}
             </p>
           </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 my-4">
           <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
             <Clock className="w-4 h-4 text-cyan-500 mx-auto mb-1" />
+            <p className="text-[10px] text-slate-400">Est. Time</p>
+            <p className="text-xs font-bold text-slate-800 dark:text-slate-200">{formatETA(activeRoute.estimatedMinutes)}</p>
+          </div>
+          <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+            <Banknote className="w-4 h-4 text-emerald-500 mx-auto mb-1" />
+            <p className="text-[10px] text-slate-400">Vehicle Fare</p>
+            <p className="text-xs font-bold text-slate-800 dark:text-slate-200">₱{activeRoute.estimatedFare.toFixed(2)}</p>
+            <p className="mt-0.5 truncate text-[9px] text-slate-500 dark:text-slate-400">{activeRoute.vehicleName}</p>
+          </div>
+          <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+            <Users className="w-4 h-4 text-indigo-500 mx-auto mb-1" />
             <p className="text-[10px] text-slate-400">Available PUVs</p>
             <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Active</p>
           </div>
