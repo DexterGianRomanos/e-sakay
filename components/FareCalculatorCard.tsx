@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { Calculator, Clock, Navigation, MapPin, CheckCircle2, Search, ChevronDown, Check } from 'lucide-react';
 import { 
   VehicleType, 
@@ -10,6 +11,14 @@ import {
   LTFRB_RATES 
 } from '@/lib/ltfrb-calculator';
 import { SOUTHERN_LEYTE_LOCATIONS, LocationPoint } from '@/lib/mock-transit-data';
+
+const VEHICLE_ICONS: Record<VehicleType, string> = {
+  jeepney_modern: 'modern-jeepney.png',
+  jeepney_traditional: 'traditional-jeepney.png',
+  uv_express_modern: 'uv-express.png',
+  bus_ordinary: 'ordinary-bus.png',
+  bus_aircon: 'aircon-bus.png',
+};
 
 interface RoutePoints {
   originName: string;
@@ -292,13 +301,24 @@ export const FareCalculatorCard: React.FC<FareCalculatorCardProps> = ({ userCoor
               <button
                 key={key}
                 onClick={() => setVehicleType(key)}
-                className={`p-3 text-left rounded-xl border text-xs font-medium transition-all cursor-pointer ${
+                aria-pressed={vehicleType === key}
+                className={`flex min-h-[72px] items-center gap-2.5 rounded-xl border p-2.5 text-left text-xs font-medium transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 ${
                   vehicleType === key
-                    ? 'bg-teal-500/10 border-teal-500 text-teal-700 dark:text-teal-300 font-semibold'
-                    : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300'
+                    ? 'border-teal-500 bg-teal-50 text-teal-800 shadow-sm dark:bg-teal-950/30 dark:text-teal-200 font-semibold'
+                    : 'border-slate-200 bg-white text-slate-700 hover:border-teal-300 dark:bg-slate-800/40 dark:border-slate-800 dark:text-slate-300 dark:hover:border-slate-600'
                 }`}
               >
-                <div>{LTFRB_RATES[key].name}</div>
+                <span className="flex h-12 w-14 shrink-0 items-center justify-center rounded-lg border border-slate-100 bg-white p-1 dark:border-slate-700">
+                  <Image
+                    src={`/vehicles/${VEHICLE_ICONS[key]}`}
+                    alt=""
+                    aria-hidden="true"
+                    width={128}
+                    height={88}
+                    className="h-full w-full object-contain"
+                  />
+                </span>
+                <span className="min-w-0 leading-snug">{LTFRB_RATES[key].name}</span>
               </button>
             ))}
           </div>
