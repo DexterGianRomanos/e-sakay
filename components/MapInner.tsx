@@ -69,10 +69,32 @@ const createPinIcon = (color: string) =>
 
 function MapTileFixer() {
   const map = useMap();
+
   useEffect(() => {
-    const timer = setTimeout(() => map.invalidateSize(), 250);
-    return () => clearTimeout(timer);
+    const container = map.getContainer();
+    let frame = 0;
+
+    const invalidateSize = () => {
+      if (container.clientWidth === 0 || container.clientHeight === 0) return;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => map.invalidateSize({ pan: false }));
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (container.clientWidth > 0 && container.clientHeight > 0) {
+        invalidateSize();
+      }
+    });
+
+    resizeObserver.observe(container);
+    invalidateSize();
+
+    return () => {
+      cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+    };
   }, [map]);
+
   return null;
 }
 
@@ -93,12 +115,11 @@ export default function MapInner({ vehicles, onSelectVehicle, userCoords, onSetU
   const [roadPath, setRoadPath] = useState<[number, number][]>([]);
 
   useEffect(() => {
-    let isSubscribed = true;
-
     if (!activeRoute) {
       return;
     }
 
+    const controller = new AbortController();
     const { originCoords, destCoords } = activeRoute;
 
     const findClosestWaypointIndex = (coords: { lat: number; lng: number }) => {
@@ -133,27 +154,33 @@ export default function MapInner({ vehicles, onSelectVehicle, userCoords, onSetU
     const uniqueWaypoints = waypointCoords.filter((item, index) => waypointCoords.indexOf(item) === index);
 
     const url = `https://router.project-osrm.org/route/v1/driving/${uniqueWaypoints.join(';')}?overview=full&geometries=geojson`;
+    const fallbackPath = intermediateNodes.map((node): [number, number] => [node.lat, node.lng]);
 
-    fetch(url)
-      .then((res) => res.json())
+    const fallbackFrame = requestAnimationFrame(() => setRoadPath(fallbackPath));
+
+    fetch(url, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Route service returned ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
-        if (!isSubscribed) return;
         if (data.routes && data.routes[0]) {
           const coordinates: [number, number][] = data.routes[0].geometry.coordinates.map(
             (coord: [number, number]) => [coord[1], coord[0]]
           );
           setRoadPath(coordinates);
-        } else {
-          setRoadPath(intermediateNodes.map((n) => [n.lat, n.lng]));
         }
       })
-      .catch(() => {
-        if (!isSubscribed) return;
-        setRoadPath(intermediateNodes.map((n) => [n.lat, n.lng]));
+      .catch((error: unknown) => {
+        if (error instanceof Error && error.name === 'AbortError') return;
+        console.warn('Unable to load road route; keeping the highway route.', error);
       });
 
     return () => {
-      isSubscribed = false;
+      cancelAnimationFrame(fallbackFrame);
+      controller.abort();
     };
   }, [activeRoute]);
 
@@ -200,6 +227,8 @@ export default function MapInner({ vehicles, onSelectVehicle, userCoords, onSetU
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          updateWhenIdle={false}
+          updateWhenZooming={false}
         />
 
         {/* Highway Corridor Line */}
