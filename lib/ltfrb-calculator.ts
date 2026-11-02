@@ -1,5 +1,6 @@
 export type VehicleType = 
   | 'jeepney_modern' 
+  | 'jeepney_traditional'
   | 'uv_express_modern'
   | 'bus_ordinary' 
   | 'bus_aircon';
@@ -16,6 +17,7 @@ export interface VehicleRate {
 
 export const LTFRB_RATES: Record<VehicleType, VehicleRate> = {
   jeepney_modern: { name: 'Modern Jeepney', baseFare: 17.00, baseDistanceKm: 4, perKmRate: 2.40, avgSpeedKmh: 42 },
+  jeepney_traditional: { name: 'Traditional Jeepney', baseFare: 13.00, baseDistanceKm: 4, perKmRate: 2.20, avgSpeedKmh: 38 },
   uv_express_modern: { name: 'Modern UV Express Van', baseFare: 0.00, baseDistanceKm: 0, perKmRate: 3.00, avgSpeedKmh: 65 },
   bus_ordinary: { name: 'Provincial Ordinary Bus', baseFare: 12.00, baseDistanceKm: 5, perKmRate: 2.20, avgSpeedKmh: 48 },
   bus_aircon: { name: 'Provincial Air-conditioned Bus', baseFare: 15.00, baseDistanceKm: 5, perKmRate: 2.45, avgSpeedKmh: 55 },

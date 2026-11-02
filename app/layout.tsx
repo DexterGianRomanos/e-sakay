@@ -19,8 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <head>
         <link rel="icon" href="/logo.png" type="image/png" />
+        <meta name="color-scheme" content="only light" />
       </head>
-      <body className="h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
+      <body className="h-full bg-slate-50 text-slate-900 transition-colors duration-200">
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
