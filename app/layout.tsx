@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="/logo.png" type="image/png" />
       </head>
-      <body className="h-full bg-slate-50 text-slate-900">
+      <body className="h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
