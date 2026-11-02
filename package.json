@@ -9,9 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@auth/core": "^0.41.3",
+    "@types/leaflet": "^1.9.22",
+    "firebase": "^13.1.0",
+    "framer-motion": "^14.9.0",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^1.66.0",
     "next": "16.4.3",
+    "next-auth": "^5.0.0-beta.32",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-leaflet": "^5.0.0"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
