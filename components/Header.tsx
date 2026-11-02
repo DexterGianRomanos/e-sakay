@@ -2,15 +2,21 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Moon, Sun, CloudSun, MapPin } from 'lucide-react';
+import { Moon, Sun, CloudSun, MapPin, LogOut } from 'lucide-react';
 
 interface HeaderProps {
   darkMode: boolean;
   setDarkMode: (val: boolean) => void;
-  weatherInfo?: string; // Optional prop to pass live weather data
+  weatherInfo?: string;
+  onSignOut?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, weatherInfo = '26.4°C • Fair & Sunny' }) => {
+export const Header: React.FC<HeaderProps> = ({ 
+  darkMode, 
+  setDarkMode, 
+  weatherInfo = '26.4°C • Fair & Sunny',
+  onSignOut 
+}) => {
   return (
     <header className="sticky top-0 z-30 w-full backdrop-blur-md bg-white/75 dark:bg-slate-900/75 border-b border-slate-200 dark:border-slate-800 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -48,7 +54,7 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, weatherIn
           </div>
         </div>
 
-        {/* Action Controls (Theme Toggle) */}
+        {/* Action Controls (Theme Toggle & Sign Out) */}
         <div className="flex items-center space-x-2">
           <button
             onClick={() => {
@@ -67,6 +73,16 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, weatherIn
           >
             {darkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
           </button>
+
+          {onSignOut && (
+            <button
+              onClick={onSignOut}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 transition-colors text-xs font-medium border border-rose-500/20 cursor-pointer"
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">Sign Out</span>
+            </button>
+          )}
         </div>
 
       </div>
